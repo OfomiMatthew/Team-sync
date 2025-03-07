@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}
+Team | TeamSync
+{% endblock title %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h2 class="title has-text-centered">TeamSync - {{ team.key }}</h2>
+
+    <!-- Message Form -->
+    <div class="box">
+      <form action="{% url 'team' %}?user={{ user }}&key={{ team.key }}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user" value="{{ user }}">
+
+        <div class="field">
+          <div class="control">
+            <textarea class="textarea" name="content" placeholder="Enter your message" rows="3" required></textarea>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+          <div class="control">
+            <button class="button is-primary">Send</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Message List -->
+    <div class="content">
+      {% for item in team.items.all %}
+      <div class="box">
+        <article class="media">
+          <div class="media-content">
+            <div class="content">
+              <p>
+                <strong>{{ item.user }}</strong> 
+                <small>@ {{ item.created_at|timesince }} ago</small>
+                <br>
+                {{ item.content }}
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+      {% empty %}
+      <div class="notification is-light has-text-centered">
+        No messages yet. Start the conversation!
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock content %}
